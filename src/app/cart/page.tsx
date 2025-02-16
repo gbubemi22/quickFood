@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router"; // Ensure router is imported
+import { useRouter } from "next/navigation";
+import { useCart } from "@/components/Page Components/Restaurant Page Components/cartContext";
+
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { useCart } from "@/components/Page Components/Restaurant Page Components/cartContext"; // Ensure correct import
 
 export default function CartPage() {
   const { cart, updateQuantity, removeItem } = useCart(); // Get cart functions from context
