@@ -1,23 +1,23 @@
-"use client";
+"use client"; // Ensure this is a client-side component
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation"; // Use next/navigation for client-side navigation
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function OtpVerification() {
+function OtpVerificationContent() {
   const [otp, setOtp] = useState("");
   const searchParams = useSearchParams();
-  const email = searchParams?.get("email");
+  const email = searchParams.get("email");
   const router = useRouter();
 
   useEffect(() => {
-    if (!email) router.push("/forgotPassword");
+    if (!email) router.push("/forgotPassword"); // Redirect if no email is provided
   }, [email, router]);
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/resetPassword?email=${email}&otp=${otp}`);
+    router.push(`/resetPassword?email=${email}&otp=${otp}`); // Redirect to Reset Password
   };
 
   return (
@@ -39,5 +39,13 @@ export default function OtpVerification() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function OtpVerification() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OtpVerificationContent />
+    </Suspense>
   );
 }
