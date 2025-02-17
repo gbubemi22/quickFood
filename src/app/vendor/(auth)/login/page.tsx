@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PendingVerificationAlert from "@/components/PendingVerificationAlert"; 
 
-export default function VendorLoginPage() {
+const VendorLoginPage = () => {
   const [formData, setFormData] = useState({
     phoneNumber: "",
     password: "",
@@ -14,52 +14,48 @@ export default function VendorLoginPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [showPending, setShowPending] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting Data:", formData); // Debugging log
-    
+
     try {
-      setLoading(true); // Show loading state
-      const response = await fetch("https://app.quickfoodshop.co.uk/v1/vendor/auth/login", {
+      setLoading(true);
+      const response = await fetch("https://app.quickfoodshop.co.uk/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
-        console.log("Login Successful:", data);
-        setShowSuccess(true);
-        // Redirect to dashboard or vendor home page after successful login
-        // router.push("/vendor/dashboard");
+        // Check if vendor is pending approval
+        if (data.status === "pending") {
+          setShowPending(true);
+        } else {
+          // Redirect to the dashboard or home page if approved
+          router.push("/dashboard"); // Replace with the actual route
+        }
       } else {
-        console.error("Login Failed:", data);
-        alert(data.message || "Login failed, please try again.");
+        setError(data.message || "Login failed, please try again.");
       }
     } catch (error) {
       console.error("Error:", error);
       alert("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-white flex justify-center items-center">
-      {showSuccess ? (
-        <SuccessAlert />
+      {showPending ? (
+        <PendingVerificationAlert /> // Show pending verification alert if vendor is pending
       ) : (
         <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg">
           <h1 className="mb-2 text-center text-4xl font-semibold">Vendor Login</h1>
-          <p className="mb-8 text-center">
-            Don't have an account?{" "}
-            <Link href="/vendor/signup" className="text-[#FF4500] hover:underline">
-              Sign up
-            </Link>
-          </p>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -74,9 +70,8 @@ export default function VendorLoginPage() {
       )}
     </div>
   );
-}
+};
 
-// ✅ Reusable Input Component
 const InputField = ({ label, name, value, onChange, type = "text" }) => (
   <div className="space-y-2">
     <label className="text-sm font-medium">{label}</label>
@@ -84,31 +79,4 @@ const InputField = ({ label, name, value, onChange, type = "text" }) => (
   </div>
 );
 
-// ✅ Success Alert Component
-const SuccessAlert = () => (
-  <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 w-80 border border-gray-200">
-    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-500">
-      <svg
-        width="34"
-        height="24"
-        viewBox="0 0 34 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M3.97266 11.569L12.7041 20.1107L30.1671 3.02734"
-          stroke="white"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
-
-    <h2 className="text-lg font-semibold mt-2">Login Successful</h2>
-    <p className="text-gray-600 text-center">You are now logged in.</p>
-    <Link href="/vendor/dashboard">
-      <Button className="mt-4 bg-[#FF4500] text-white w-full rounded-[30px] px-10">GO TO DASHBOARD</Button>
-    </Link>
-  </div>
-);
+export default VendorLoginPage;
