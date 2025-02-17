@@ -119,14 +119,15 @@ export default function CartPage() {
               <p className="flex justify-between font-bold text-lg mt-2">
                 <span>Total:</span> <span>${total.toFixed(2)}</span>
               </p>
-            </div>
+            </div>    
             <Button
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg"
-              onClick={() => router.push("/cart/delivery")}
-            >
-              CONTINUE
-            </Button>
-          </div>
+  className="w-full bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg"
+  onClick={() => router.push("/restaurants/1?scene=delivery")}
+>
+  CONTINUE
+</Button>
+
+              </div>
         </div>
       </div>
     </div>

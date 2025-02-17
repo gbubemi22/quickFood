@@ -116,7 +116,8 @@ export default function DeliveryPage() {
       {/* Continue Button */}
       <Button
         className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg text-lg"
-        onClick={() => router.push("/checkout/summary")}
+        onClick={() => router.push("/restaurants/1?scene=summary")}
+
       >
         CONTINUE
       </Button>

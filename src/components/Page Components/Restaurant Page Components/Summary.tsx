@@ -59,7 +59,7 @@ export default function SummaryPage() {
       </div>
       
       {/* Continue Button */}
-      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg" onClick={() => router.push("/checkout/payment")}> 
+      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg"  onClick={() => router.push("/restaurants/1?scene=payment")}> 
         CONTINUE 
       </Button>
     </div>

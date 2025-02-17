@@ -1,4 +1,7 @@
 "use client";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+
 import Main from "@/components/Page Components/Main";
 import {
   Checkout,
@@ -10,12 +13,19 @@ import {
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 
-import { useState } from "react";
-
 export default function RestaurantPage() {
-  const [currentScene, setCurrentScene] = useState("main");
+  const searchParams = useSearchParams();
+  const sceneFromUrl = searchParams.get("scene") || "main";
+  
+  const [currentScene, setCurrentScene] = useState(sceneFromUrl);
 
-  console.log(currentScene);
+  // Update the state if the URL changes
+  useEffect(() => {
+    setCurrentScene(sceneFromUrl);
+  }, [sceneFromUrl]);
+
+  console.log("Current Scene:", currentScene);
+
   const renderScene = (setCurrentScene: (scene: string) => void) => {
     switch (currentScene) {
       case "main":
@@ -38,9 +48,9 @@ export default function RestaurantPage() {
   return (
     <div className="min-h-screen w-full bg-gray-50">
       <SiteHeader />
-      <main className="container w-full mx-auto  py-12">
+      <main className="container w-full mx-auto py-12">
         <div className="flex items-center justify-center w-full gap-4 mb-4">
-          <Button onClick={() => setCurrentScene("main")}>main</Button>
+          <Button onClick={() => setCurrentScene("main")}>Main</Button>
           <Button onClick={() => setCurrentScene("summary")}>Summary</Button>
           <Button onClick={() => setCurrentScene("checkout")}>Checkout</Button>
           <Button onClick={() => setCurrentScene("delivery")}>Delivery</Button>
