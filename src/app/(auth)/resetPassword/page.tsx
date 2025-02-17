@@ -22,11 +22,11 @@ export default function ResetPassword() {
   }, []);
 
   // Redirect if email or OTP is missing
-  useEffect(() => {
-    if (email === null || otp === null) {
-      router.push("/forgot-password");
-    }
-  }, [email, otp, router]);
+  // useEffect(() => {
+  //   if (email === null || otp === null) {
+  //     router.push("/forgot-password");
+  //   }
+  // }, [email, otp, router]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();

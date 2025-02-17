@@ -1,23 +1,23 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-function OtpVerificationContent() {
+export default function OtpVerification() {
   const [otp, setOtp] = useState("");
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email = searchParams?.get("email");
   const router = useRouter();
 
   useEffect(() => {
-    if (!email) router.push("/forgotPassword"); // Redirect if no email is provided
+    if (!email) router.push("/forgotPassword");
   }, [email, router]);
 
-  const handleOtpSubmit = (e) => {
+  const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/resetPassword?email=${email}&otp=${otp}`); // Redirect to Reset Password
+    router.push(`/resetPassword?email=${email}&otp=${otp}`);
   };
 
   return (
@@ -39,13 +39,5 @@ function OtpVerificationContent() {
         </form>
       </div>
     </div>
-  );
-}
-
-export default function OtpVerification() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <OtpVerificationContent />
-    </Suspense>
   );
 }
