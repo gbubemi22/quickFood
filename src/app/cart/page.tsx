@@ -1,14 +1,15 @@
 "use client";
+
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router"; // Ensure router is imported
+import { useRouter } from "next/navigation"; // Updated import
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { useCart } from "@/components/Page Components/Restaurant Page Components/cartContext"; // Ensure correct import
+import { useCart } from "@/components/Page Components/Restaurant Page Components/cartContext";
 
 export default function CartPage() {
-  const { cart, updateQuantity, removeItem } = useCart(); // Get cart functions from context
+  const { cart, updateQuantity, removeItem } = useCart();
   const router = useRouter(); // Initialize router
 
   const subtotal = cart.reduce(
@@ -87,7 +88,6 @@ export default function CartPage() {
               </div>
             ))}
           </div>
-
           {/* Order Summary Section */}
           <div className="w-1/3 bg-white shadow-sm p-4 rounded-lg">
             <h3 className="font-bold text-lg mb-4">Order Summary</h3>
