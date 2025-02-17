@@ -1,25 +1,34 @@
-"use client"; // This directive makes this a client-side component
+"use client"; // Ensure this is a client component
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";  // Use next/navigation for client-side navigation
+import { useRouter } from "next/navigation"; // Use next/navigation for client-side navigation
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function ResetPassword() {
   const router = useRouter();
-  const email = new URLSearchParams(window.location.search).get("email");
-  const otp = new URLSearchParams(window.location.search).get("otp");
-
+  const [email, setEmail] = useState<string | null>(null);
+  const [otp, setOtp] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // Retrieve email and OTP from URL only on the client side
   useEffect(() => {
-    if (!email || !otp) {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setEmail(params.get("email"));
+      setOtp(params.get("otp"));
+    }
+  }, []);
+
+  // Redirect if email or OTP is missing
+  useEffect(() => {
+    if (email === null || otp === null) {
       router.push("/forgot-password");
     }
   }, [email, otp, router]);
 
-  const handleResetPassword = async (e) => {
+  const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
