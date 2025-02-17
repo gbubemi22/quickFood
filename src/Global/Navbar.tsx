@@ -1,7 +1,7 @@
 import { ChevronDown, ShoppingCart, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../public/logo.png"
+import Logo from "../../public/logo.png";
 
 export function NavBar() {
   return (
@@ -45,7 +45,7 @@ export function NavBar() {
           />
         </Link>
         <div className="flex items-center gap-4">
-          <Link href="/signup" className="flex items-center gap-1">
+          <Link href="/onboard" className="flex items-center gap-1">
             <User className="h-5 w-5" />
             Account
           </Link>

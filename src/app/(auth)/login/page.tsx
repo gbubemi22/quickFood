@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import login from "../../../../public/placeholder.jpg";
+
+import login from "../../../../public/login.png";
 import Google from "../../../../public/ic_google.png";
 
 export default function LoginPage() {
@@ -19,7 +20,7 @@ export default function LoginPage() {
   const handleLogin = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch("https://app.quickfoodshop.co.uk/v1/auth/login", {
         method: "POST",
