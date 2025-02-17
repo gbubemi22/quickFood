@@ -6,9 +6,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function AdminLoginPage() {
+export default function VendorLoginPage() {
   const [formData, setFormData] = useState({
-    email: "",
+    phoneNumber: "",
     password: "",
   });
 
@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
     
     try {
       setLoading(true); // Show loading state
-      const response = await fetch("https://app.quickfoodshop.co.uk/v1/admin/auth/login", {
+      const response = await fetch("https://app.quickfoodshop.co.uk/v1/vendor/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -32,11 +32,12 @@ export default function AdminLoginPage() {
   
       if (response.ok) {
         console.log("Login Successful:", data);
-        // Redirect or handle login success (like storing the token)
         setShowSuccess(true);
+        // Redirect to dashboard or vendor home page after successful login
+        // router.push("/vendor/dashboard");
       } else {
         console.error("Login Failed:", data);
-        setError(data.message || "Login failed, please try again.");
+        alert(data.message || "Login failed, please try again.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -52,21 +53,21 @@ export default function AdminLoginPage() {
         <SuccessAlert />
       ) : (
         <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg">
-          <h1 className="mb-2 text-center text-4xl font-semibold">Admin Login</h1>
+          <h1 className="mb-2 text-center text-4xl font-semibold">Vendor Login</h1>
           <p className="mb-8 text-center">
             Don't have an account?{" "}
-            <Link href="/admin/signup" className="text-[#FF4500] hover:underline">
-              Create one
+            <Link href="/vendor/signup" className="text-[#FF4500] hover:underline">
+              Sign up
             </Link>
           </p>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <InputField label="Email" name="email" value={formData.email} onChange={setFormData} type="email" />
+            <InputField label="Phone Number" name="phoneNumber" value={formData.phoneNumber} onChange={setFormData} />
             <InputField label="Password" name="password" value={formData.password} onChange={setFormData} type="password" />
             <Button type="submit" className="w-full bg-[#FF4500] text-white hover:bg-[#FF4500]/90" disabled={loading}>
-              {loading ? "Logging In..." : "LOG IN"}
+              {loading ? "Logging In..." : "LOGIN"}
             </Button>
           </form>
         </div>
@@ -106,7 +107,7 @@ const SuccessAlert = () => (
 
     <h2 className="text-lg font-semibold mt-2">Login Successful</h2>
     <p className="text-gray-600 text-center">You are now logged in.</p>
-    <Link href="/admin/dashboard">
+    <Link href="/vendor/dashboard">
       <Button className="mt-4 bg-[#FF4500] text-white w-full rounded-[30px] px-10">GO TO DASHBOARD</Button>
     </Link>
   </div>

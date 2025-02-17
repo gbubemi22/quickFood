@@ -6,11 +6,20 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function AdminSignUpPage() {
+export default function VendorSignUpPage() {
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    businessAddress: "",
+    phoneNumber: "",
+    businessName: "",
+    businessDescription: "",
+    location: {
+      latitude: "",
+      longitude: "",
+    },
   });
 
   const [loading, setLoading] = useState(false);
@@ -23,7 +32,7 @@ export default function AdminSignUpPage() {
     
     try {
       setLoading(true); // Show loading state
-      const response = await fetch("https://app.quickfoodshop.co.uk/v1/admin/auth/register", {
+      const response = await fetch("https://app.quickfoodshop.co.uk/v1/vendor/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -55,7 +64,7 @@ export default function AdminSignUpPage() {
           <h1 className="mb-2 text-center text-4xl font-semibold">Create Vendor Account</h1>
           <p className="mb-8 text-center">
             Already have an account?{" "}
-            <Link href="/admin/login" className="text-[#FF4500] hover:underline">
+            <Link href="/vendor/login" className="text-[#FF4500] hover:underline">
               Login
             </Link>
           </p>
@@ -63,11 +72,17 @@ export default function AdminSignUpPage() {
           {error && <p className="text-red-500 text-center">{error}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <InputField label="Full Name" name="fullName" value={formData.fullName} onChange={setFormData} />
+            <InputField label="First Name" name="firstName" value={formData.firstName} onChange={setFormData} />
+            <InputField label="Last Name" name="lastName" value={formData.lastName} onChange={setFormData} />
             <InputField label="Email" name="email" value={formData.email} onChange={setFormData} type="email" />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <InputField label="Password" name="password" value={formData.password} onChange={setFormData} type="password" />
-            </div>
+            <InputField label="Password" name="password" value={formData.password} onChange={setFormData} type="password" />
+            <InputField label="Business Address" name="businessAddress" value={formData.businessAddress} onChange={setFormData} />
+            <InputField label="Phone Number" name="phoneNumber" value={formData.phoneNumber} onChange={setFormData} />
+            <InputField label="Business Name" name="businessName" value={formData.businessName} onChange={setFormData} />
+            <InputField label="Business Description" name="businessDescription" value={formData.businessDescription} onChange={setFormData} />
+            <InputField label="Latitude" name="latitude" value={formData.location.latitude} onChange={setFormData} />
+            <InputField label="Longitude" name="longitude" value={formData.location.longitude} onChange={setFormData} />
+
             <Button type="submit" className="w-full bg-[#FF4500] text-white hover:bg-[#FF4500]/90" disabled={loading}>
               {loading ? "Creating Account..." : "CREATE ACCOUNT"}
             </Button>
@@ -108,8 +123,8 @@ const SuccessAlert = () => (
     </div>
 
     <h2 className="text-lg font-semibold mt-2">Account Created</h2>
-    <p className="text-gray-600 text-center">Your admin account has been created successfully.</p>
-    <Link href="/admin/login">
+    <p className="text-gray-600 text-center">Your vendor account has been created successfully.</p>
+    <Link href="/vendor/login">
       <Button className="mt-4 bg-[#FF4500] text-white w-full rounded-[30px] px-10">GO TO LOGIN</Button>
     </Link>
   </div>
