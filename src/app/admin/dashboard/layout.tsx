@@ -38,7 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Button>
           </div>
         </header>
-        {/* <SidebarTrigger /> */}
+        <SidebarTrigger />
         {children}
       </main>
     </SidebarProvider>

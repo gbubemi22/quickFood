@@ -1,103 +1,106 @@
 "use client";
-
-import { useState } from "react";
-import Link from "next/link";
-import LocationPicker from "@/components/LocationPicker"; 
-import PendingVerificationAlert from "@/components/PendingVerificationAlert"; 
-
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
-export default function AdminSignUpPage() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    phoneNumber: "",
-    businessName: "",
-    businessDescription: "",
-    businessAddress: "",
-    latitude: null as number | null,
-    longitude: null as number | null,
-  });
+interface Vendor {
+  _id: string;
+  businessName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  createdAt: string;
+  block: boolean; // true = blocked, false = active
+}
 
-  const [loading, setLoading] = useState(false);
-  const [showPendingVerification, setShowPendingVerification] = useState(false); // Add state for pending verification
-  const [error, setError] = useState("");
+export default function VendorTable() {
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [loading, setLoading] = useState<string | null>(null);
 
-  const handleLocationSelect = (lat: number, lng: number) => {
-    setFormData((prev) => ({ ...prev, latitude: lat, longitude: lng }));
-  };
+  // Fetch Active Vendors
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const response = await fetch("https://app.quickfoodshop.co.uk/v1/dashboard/active-vendors");
+        const data = await response.json();
+        if (data.success) {
+          setVendors(data.data);
+        } else {
+          console.error("Failed to fetch vendors:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
+    };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    fetchVendors();
+  }, []);
 
+  // Toggle Block/Unblock Vendor
+  const toggleBlockStatus = async (vendorId: string) => {
     try {
-      setLoading(true);
-      const response = await fetch("https://app.quickfoodshop.co.uk/v1/admin/auth/register", {
-        method: "POST",
+      setLoading(vendorId); // Show loading state for this vendor
+      const response = await fetch(`https://app.quickfoodshop.co.uk/v1/dashboard/block-unblock/${vendorId}`, {
+        method: "POST", 
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Failed to update status");
 
-      if (response.ok) {
-        console.log("Signup Successful:", data);
-        setShowPendingVerification(true); // Show pending verification after successful signup
-      } else {
-        console.error("Signup Failed:", data);
-        alert(data.message || "Signup failed, please try again.");
-      }
+      // Update UI after successful toggle
+      setVendors((prev) =>
+        prev.map((vendor) =>
+          vendor._id === vendorId ? { ...vendor, block: !vendor.block } : vendor
+        )
+      );
+
+      console.log("Status updated:", data);
     } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
+      console.error("Failed to update status:", error.message);
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-white flex justify-center items-center">
-      {showPendingVerification ? (
-        <PendingVerificationAlert />
-      ) : (
-        <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg">
-          <h1 className="mb-2 text-center text-4xl font-semibold">Create Vendor Account</h1>
-          <p className="mb-8 text-center">
-            Already have an account?{" "}
-            <Link href="/admin/login" className="text-[#FF4500] hover:underline">
-              Login
-            </Link>
-          </p>
-
-          {error && <p className="text-red-500 text-center">{error}</p>}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <InputField label="Full Name" name="fullName" value={formData.fullName} onChange={setFormData} />
-            <InputField label="Email" name="email" value={formData.email} onChange={setFormData} type="email" />
-            <InputField label="Password" name="password" value={formData.password} onChange={setFormData} type="password" />
-            <InputField label="Phone Number" name="phoneNumber" value={formData.phoneNumber} onChange={setFormData} />
-            <InputField label="Business Name" name="businessName" value={formData.businessName} onChange={setFormData} />
-            <InputField label="Business Description" name="businessDescription" value={formData.businessDescription} onChange={setFormData} />
-            <InputField label="Business Address" name="businessAddress" value={formData.businessAddress} onChange={setFormData} />
-            
-            <LocationPicker onLocationSelect={handleLocationSelect} />
-            
-            <Button type="submit" className="w-full bg-[#FF4500] text-white hover:bg-[#FF4500]/90" disabled={loading}>
-              {loading ? "Creating Account..." : "CREATE ACCOUNT"}
-            </Button>
-          </form>
-        </div>
-      )}
+    <div className="p-4 bg-white shadow rounded-lg">
+      <h2 className="text-lg font-semibold mb-4">Active Vendors</h2>
+      <table className="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="border p-2">Vendor ID</th>
+            <th className="border p-2">Store Name</th>
+            <th className="border p-2">Contact Person</th>
+            <th className="border p-2">Email</th>
+            <th className="border p-2">Registered Date</th>
+            <th className="border p-2">Status</th>
+            <th className="border p-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {vendors.map((vendor) => (
+            <tr key={vendor._id} className="text-center">
+              <td className="border p-2">{vendor._id}</td>
+              <td className="border p-2">{vendor.businessName}</td>
+              <td className="border p-2">{`${vendor.firstName} ${vendor.lastName}`}</td>
+              <td className="border p-2">{vendor.email}</td>
+              <td className="border p-2">{new Date(vendor.createdAt).toLocaleDateString()}</td>
+              <td className={`border p-2 ${vendor.block ? "text-red-500" : "text-green-500"}`}>
+                {vendor.block ? "Blocked" : "Active"}
+              </td>
+              <td className="border p-2">
+                <Button
+                  variant={vendor.block ? "default" : "destructive"}
+                  onClick={() => toggleBlockStatus(vendor._id)}
+                  disabled={loading === vendor._id}
+                >
+                  {loading === vendor._id ? "Updating..." : vendor.block ? "Unblock" : "Block"}
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
-
-// ✅ Reusable Input Component
-const InputField = ({ label, name, value, onChange, type = "text" }) => (
-  <div className="space-y-2">
-    <label className="text-sm font-medium">{label}</label>
-    <Input name={name} type={type} placeholder={label} value={value} onChange={(e) => onChange((prev) => ({ ...prev, [name]: e.target.value }))} required />
-  </div>
-);

@@ -26,12 +26,12 @@ type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
 const menuItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
-  { name: "Transactions", href: "/dashboard/transactions", icon: Receipt },
-  { name: "Invoice", href: "/dashboard/invoice", icon: FileText },
-  { name: "Tracking", href: "/dashboard/tracking", icon: MapPin },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
-  { name: "Support", href: "/dashboard/support", icon: HelpCircle },
+  { name: "Vendors", href: "/admin/dashboard/vendors", icon: ShoppingCart },
+  { name: "Transactions", href: "/admin/dashboard/transactions", icon: Receipt },
+  { name: "Invoice", href: "/admin/dashboard/invoice", icon: FileText },
+  { name: "Tracking", href: "/admin/dashboard/tracking", icon: MapPin },
+  { name: "Settings", href: "/admin/dashboard/settings", icon: Settings },
+  { name: "Support", href: "/admin/dashboard/support", icon: HelpCircle },
 ];
 
 export function SidebarMenu({ className }: SidebarProps) {

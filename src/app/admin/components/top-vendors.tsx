@@ -19,7 +19,7 @@ const vendors: Vendor[] = [
     rating: 4.5,
     reviews: 32,
     revenue: 33000,
-    image: "/vendor-image-1.png", // Update with correct image
+    image: "/Frame 512.png", 
   },
   {
     id: "2",
@@ -28,7 +28,7 @@ const vendors: Vendor[] = [
     rating: 4.5,
     reviews: 32,
     revenue: 28000,
-    image: "/vendor-image-2.png", // Update with correct image
+    image: "/basket2.png", 
   },
 ];
 

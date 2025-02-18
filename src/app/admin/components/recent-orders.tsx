@@ -15,16 +15,16 @@ interface Order {
 const orders: Order[] = [
   {
     id: "1",
-    image: "/placeholder.svg",
+    image: "/Frame 512.png",
     description: "Rice and Jollof Sallad",
     customer: "customer@gmail.com",
-    price: 302,
+    price: 312,
     date: "Oct 11, 2024",
     status: "Successful",
   },
   {
     id: "2",
-    image: "/placeholder.svg",
+    image: "/Frame 512.png",
     description: "Fried rice an Chicken",
     customer: "customer@gmail.com",
     price: 302,
@@ -33,7 +33,7 @@ const orders: Order[] = [
   },
   {
     id: "3",
-    image: "/placeholder.svg",
+    image: "/Frame 512.png",
     description: "Roasted Beef",
     customer: "customer@gmail.com",
     price: 302,
