@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { PendingVendors } from "@/app/admin/components/pending-vendors";
 
 interface Vendor {
   _id: string;
@@ -65,7 +66,7 @@ export default function VendorTable() {
       {loading ? (
         <p>Loading vendors...</p>
       ) : (
-        <table className="min-w-full border border-gray-200">
+        <table className="min-w-3/4 border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
               <th className="border px-4 py-2">Vendor ID</th>
@@ -97,6 +98,9 @@ export default function VendorTable() {
           </tbody>
         </table>
       )}
+       <div className="w-[300px] space-y-6">
+                  <PendingVendors/>
+                </div>
     </div>
   );
 }

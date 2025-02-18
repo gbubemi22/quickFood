@@ -101,6 +101,7 @@ export default function VendorTable() {
           ))}
         </tbody>
       </table>
+      
     </div>
   );
 }
