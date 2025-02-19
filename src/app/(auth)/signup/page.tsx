@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-// import { signupUser } from "@/lib/api/auth";
+import { Mail, CheckCircle } from "lucide-react";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -16,16 +14,15 @@ export default function SignUpPage() {
     phoneNumber: "",
     email: "",
     password: "",
-    // confirmPassword: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [showOtpVerification, setShowOtpVerification] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting Data:", formData); // Debugging log
+    setLoading(true);
     
     try {
       const response = await fetch("https://app.quickfoodshop.co.uk/v1/auth/register", {
@@ -33,38 +30,36 @@ export default function SignUpPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         console.log("Signup Successful:", data);
-        setShowSuccess(true);
+        setShowOtpVerification(true);
       } else {
-        console.error("Signup Failed:", data);
-        alert(data.message || "Signup failed, please try again.");
+        setError(data.message || "Signup failed, please try again.");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
+      setError("Something went wrong. Please try again.");
     }
+    
+    setLoading(false);
   };
-  
-  
 
   return (
     <div className="min-h-screen w-full bg-white flex justify-center items-center">
-      {showSuccess ? (
-        <SuccessAlert />
+      {showOtpVerification ? (
+        <OtpVerification email={formData.email} />
       ) : (
         <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg">
           <h1 className="mb-2 text-center text-4xl font-semibold">Create Account</h1>
           <p className="mb-8 text-center">
-            Already have an account?{" "}
+            Already have an account? {" "}
             <Link href="/login" className="text-[#FF4500] hover:underline">
               Login
             </Link>
           </p>
-
           {error && <p className="text-red-500 text-center">{error}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -76,7 +71,6 @@ export default function SignUpPage() {
             <InputField label="Email" name="email" value={formData.email} onChange={setFormData} type="email" />
             <div className="grid gap-4 sm:grid-cols-2">
               <InputField label="Password" name="password" value={formData.password} onChange={setFormData} type="password" />
-              {/* <InputField label="Confirm Password" name="confirmPassword" value={formData.confirmPassword} onChange={setFormData} type="password" /> */}
             </div>
             <Button type="submit" className="w-full bg-[#FF4500] text-white hover:bg-[#FF4500]/90" disabled={loading}>
               {loading ? "Creating Account..." : "CREATE ACCOUNT"}
@@ -88,7 +82,6 @@ export default function SignUpPage() {
   );
 }
 
-// ✅ Reusable Input Component
 const InputField = ({ label, name, value, onChange, type = "text" }) => (
   <div className="space-y-2">
     <label className="text-sm font-medium">{label}</label>
@@ -96,32 +89,62 @@ const InputField = ({ label, name, value, onChange, type = "text" }) => (
   </div>
 );
 
-// ✅ Success Alert Component
-const SuccessAlert = () => (
-  <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 w-80 border border-gray-200">
-    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-500">
-  <svg
-    width="34"
-    height="24"
-    viewBox="0 0 34 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M3.97266 11.569L12.7041 20.1107L30.1671 3.02734"
-      stroke="white"
-      strokeWidth="6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-</div>
+const OtpVerification = ({ email }) => {
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
+  const handleChange = (e, index) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length <= 1) {
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+    }
+  };
 
-    <h2 className="text-lg font-semibold mt-2">Account Created</h2>
-    <p className="text-gray-600 text-center">Your account has been created successfully.</p>
-    <Link href="/login">
-      <Button className="mt-4 bg-[#FF4500] text-white w-full rounded-[30px] px-10">GO TO LOGIN</Button>
-    </Link>
-  </div>
-);
+  const handleVerifyOtp = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("https://app.quickfoodshop.co.uk/v1/auth/verify-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp_token: otp.join("") }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setSuccess(true);
+      } else {
+        setError(data.message || "Invalid OTP, please try again.");
+      }
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg text-center">
+      <Mail className="w-12 h-12 mx-auto text-[#FF4500]" />
+      <h2 className="text-2xl font-semibold mb-4">Check Mail for OTP</h2>
+      <p className="text-gray-600 mb-4">Enter the 6-digit code sent to your email.</p>
+      <div className="flex justify-center space-x-2">
+        {otp.map((digit, index) => (
+          <input key={index} className="border w-10 h-12 text-center text-xl" type="text" maxLength="1" value={digit} onChange={(e) => handleChange(e, index)} />
+        ))}
+      </div>
+      {error && <p className="text-red-500 text-center">{error}</p>}
+      <Button className="mt-4 bg-[#FF4500] text-white w-full" onClick={handleVerifyOtp} disabled={loading}>
+        {loading ? "Verifying..." : "CONFIRM"}
+      </Button>
+      {success && (
+        <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-lg">
+          <CheckCircle className="w-8 h-8 mx-auto mb-2" />
+          <p>Verification Successful! You can now login.</p>
+          <Link href="/login" className="mt-2 block text-[#FF4500] font-semibold hover:underline">Go to Login</Link>
+        </div>
+      )}
+    </div>
+  );
+};

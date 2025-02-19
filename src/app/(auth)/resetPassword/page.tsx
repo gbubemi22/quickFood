@@ -35,8 +35,8 @@ export default function ResetPassword() {
       return;
     }
 
-    const response = await fetch("https://app.quickfoodshop.co.uk/v1/auth/forget-password", {
-      method: "POST",
+    const response = await fetch("https://app.quickfoodshop.co.uk/v1/auth/reset-password", {
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, otp_token: otp, password }),
     });
