@@ -89,6 +89,8 @@ export default function CartPage() {
             ))}
           </div>
 
+            {/* fix  */}
+
           {/* Order Summary Section */}
           <div className="w-1/3 bg-white shadow-sm p-4 rounded-lg">
             <h3 className="font-bold text-lg mb-4">Order Summary</h3>
