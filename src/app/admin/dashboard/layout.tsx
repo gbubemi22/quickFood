@@ -11,18 +11,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <AppSidebar />
       <main className="w-full">
         <header className="flex items-center justify-between border-b bg-white px-6 py-4">
+        <SidebarTrigger/>
           <div>
-            <h1 className="text-2xl font-semibold">Welcome back, Femi!</h1>
-            <p className="text-gray-500">
+           
+            <h1 className="text-2xl font-semibold">Welcome back, Admin</h1>
+            <p className="text-gray-500 sm:hidden">
               See what's happening with your store today!
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="relative rounded-[0]">
+            {/* <div className="relative rounded-[0]">
               <Search className="absolute left-3 top-1/2  -translate-y-1/2 text-gray-500" />
               <Input  className="w-[0px] pl-9 " />
-            </div>
-            <Button variant="ghost" size="icon">
+            </div> */}
+            {/* <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>
             <Button
@@ -35,10 +37,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 alt="Avatar"
                 className="rounded-full"
               />
-            </Button>
+            </Button> */}
+           
           </div>
         </header>
-        {/* <SidebarTrigger /> */}
+        
         {children}
       </main>
     </SidebarProvider>

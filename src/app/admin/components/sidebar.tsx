@@ -26,12 +26,9 @@ type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
 const menuItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
-  { name: "Transactions", href: "/dashboard/transactions", icon: Receipt },
-  { name: "Invoice", href: "/dashboard/invoice", icon: FileText },
-  { name: "Tracking", href: "/dashboard/tracking", icon: MapPin },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
-  { name: "Support", href: "/dashboard/support", icon: HelpCircle },
+  { name: "Vendors", href: "/admin/dashboard/vendors", icon: ShoppingCart },
+  { name: "Settings", href: "/admin/dashboard/settings", icon: Settings },
+  { name: "Support", href: "/admin/dashboard/support", icon: HelpCircle },
 ];
 
 export function SidebarMenu({ className }: SidebarProps) {
@@ -59,13 +56,6 @@ export function SidebarMenu({ className }: SidebarProps) {
         ))}
       </div>
       <div className="border-t p-4">
-        <div className="flex items-center gap-3 px-2 py-3">
-          <Image src={userSrc} alt="User" width={30} height={30} className="h-10 w-10 rounded-full" />
-          <div>
-            <p className="font-medium">Tobi Makinde</p>
-            <p className="text-sm text-gray-500">Customer</p>
-          </div>
-        </div>
         <Button variant="ghost" className="w-full justify-start gap-2 text-red-500">
           <LogOut className="h-5 w-5" />
           Log Out
@@ -73,4 +63,4 @@ export function SidebarMenu({ className }: SidebarProps) {
       </div>
     </div>
   );
-}
+} 

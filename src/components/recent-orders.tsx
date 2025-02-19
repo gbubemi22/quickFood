@@ -15,7 +15,7 @@ interface Order {
 const orders: Order[] = [
   {
     id: "1",
-    image: "/placeholder.svg",
+    image: "/Frame 512.png",
     description: "Rice and Jollof Sallad",
     customer: "customer@gmail.com",
     price: 302,

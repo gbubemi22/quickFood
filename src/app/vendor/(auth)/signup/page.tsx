@@ -1,103 +1,109 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import LocationPicker from "@/components/LocationPicker"; 
-import PendingVerificationAlert from "@/components/PendingVerificationAlert"; 
-
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import dynamic from "next/dynamic";
 
-export default function AdminSignUpPage() {
+interface MapComponentProps {
+  // other props
+  onSelect: (lat: number, lng: number) => void;
+}
+
+const MapComponent = dynamic(() => import("@/components/MapComponent"), {
+  ssr: false,
+});
+
+export default function VendorSignup() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    businessAddress: "",
     phoneNumber: "",
     businessName: "",
     businessDescription: "",
-    businessAddress: "",
-    latitude: null as number | null,
-    longitude: null as number | null,
+    location: { latitude: null as number | null, longitude: null as number | null },
   });
-
   const [loading, setLoading] = useState(false);
-  const [showPendingVerification, setShowPendingVerification] = useState(false); // Add state for pending verification
-  const [error, setError] = useState("");
 
-  const handleLocationSelect = (lat: number, lng: number) => {
-    setFormData((prev) => ({ ...prev, latitude: lat, longitude: lng }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleMapSelect = (lat: number, lng: number) => {
+    if (lat && lng) {
+      setFormData((prev) => ({ ...prev, location: { latitude: lat, longitude: lng } }));
+    }
+  };
+  
 
+  const useCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData((prev) => ({
+            ...prev,
+            location: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          }));
+        },
+        (error) => console.error("Error getting location:", error)
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await fetch("https://app.quickfoodshop.co.uk/v1/admin/auth/register", {
+      const response = await fetch("https://app.quickfoodshop.co.uk/v1/vendor/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Signup Successful:", data);
-        setShowPendingVerification(true); // Show pending verification after successful signup
+      const result = await response.json();
+      if (result.success) {
+        router.push("/vendor/pending-verification");
       } else {
-        console.error("Signup Failed:", data);
-        alert(data.message || "Signup failed, please try again.");
+        alert("Signup failed: " + result.message);
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
+      console.error("Error during signup:", error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-white flex justify-center items-center">
-      {showPendingVerification ? (
-        <PendingVerificationAlert />
-      ) : (
-        <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg">
-          <h1 className="mb-2 text-center text-4xl font-semibold">Create Vendor Account</h1>
-          <p className="mb-8 text-center">
-            Already have an account?{" "}
-            <Link href="/admin/login" className="text-[#FF4500] hover:underline">
-              Login
-            </Link>
-          </p>
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold text-center mb-4">Vendor Sign Up</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input name="firstName" placeholder="First Name" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="lastName" placeholder="Last Name" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input type="email" name="email" placeholder="Email" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input type="password" name="password" placeholder="Password" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="businessAddress" placeholder="Business Address" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="phoneNumber" placeholder="Phone Number" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="businessName" placeholder="Business Name" onChange={handleChange} className="w-full p-2 border rounded" />
+        <textarea name="businessDescription" placeholder="Business Description" onChange={handleChange} className="w-full p-2 border rounded"></textarea>
 
-          {error && <p className="text-red-500 text-center">{error}</p>}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <InputField label="Full Name" name="fullName" value={formData.fullName} onChange={setFormData} />
-            <InputField label="Email" name="email" value={formData.email} onChange={setFormData} type="email" />
-            <InputField label="Password" name="password" value={formData.password} onChange={setFormData} type="password" />
-            <InputField label="Phone Number" name="phoneNumber" value={formData.phoneNumber} onChange={setFormData} />
-            <InputField label="Business Name" name="businessName" value={formData.businessName} onChange={setFormData} />
-            <InputField label="Business Description" name="businessDescription" value={formData.businessDescription} onChange={setFormData} />
-            <InputField label="Business Address" name="businessAddress" value={formData.businessAddress} onChange={setFormData} />
-            
-            <LocationPicker onLocationSelect={handleLocationSelect} />
-            
-            <Button type="submit" className="w-full bg-[#FF4500] text-white hover:bg-[#FF4500]/90" disabled={loading}>
-              {loading ? "Creating Account..." : "CREATE ACCOUNT"}
-            </Button>
-          </form>
+        <div className="flex flex-col gap-3">
+          <Button type="button" onClick={useCurrentLocation} className="bg-blue-500 text-white">Use Present Location</Button>
+          <MapComponent onSelect={handleMapSelect} />
         </div>
-      )}
+
+        <Button type="submit" disabled={loading} className="w-full bg-green-500 text-white">
+          {loading ? "Signing Up..." : "Sign Up"}
+        </Button>
+      </form>
     </div>
   );
 }
-
-// ✅ Reusable Input Component
-const InputField = ({ label, name, value, onChange, type = "text" }) => (
-  <div className="space-y-2">
-    <label className="text-sm font-medium">{label}</label>
-    <Input name={name} type={type} placeholder={label} value={value} onChange={(e) => onChange((prev) => ({ ...prev, [name]: e.target.value }))} required />
-  </div>
-);

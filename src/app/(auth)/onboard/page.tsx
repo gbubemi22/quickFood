@@ -18,7 +18,7 @@ export default function OnboardPage() {
       case "vendor":
         return "/vendor/signup";
       case "admin":
-        return "/admin/signup";
+        return "/admin/login";
       default:
         return "#";
     }
@@ -64,7 +64,7 @@ export default function OnboardPage() {
           onClick={() => handleRoleSelection("admin")}
         >
           <h2 className="text-lg font-semibold">Admin</h2>
-          <p className="text-sm text-gray-600">Sign up as an admin to manage the platform.</p>
+          <p className="text-sm text-gray-600">Log in as an admin to manage the platform.</p>
         </div>
 
         {/* Continue Button */}
