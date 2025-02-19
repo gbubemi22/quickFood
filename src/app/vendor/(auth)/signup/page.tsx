@@ -1,107 +1,109 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 
-interface Vendor {
-  _id: string;
-  businessName: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  createdAt: string;
-  block: boolean; // true = blocked, false = active
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+
+interface MapComponentProps {
+  // other props
+  onSelect: (lat: number, lng: number) => void;
 }
 
-export default function VendorTable() {
-  const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [loading, setLoading] = useState<string | null>(null);
+const MapComponent = dynamic(() => import("@/components/MapComponent"), {
+  ssr: false,
+});
 
-  // Fetch Active Vendors
-  useEffect(() => {
-    const fetchVendors = async () => {
-      try {
-        const response = await fetch("https://app.quickfoodshop.co.uk/v1/dashboard/active-vendors");
-        const data = await response.json();
-        if (data.success) {
-          setVendors(data.data);
-        } else {
-          console.error("Failed to fetch vendors:", data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching vendors:", error);
-      }
-    };
+export default function VendorSignup() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    businessAddress: "",
+    phoneNumber: "",
+    businessName: "",
+    businessDescription: "",
+    location: { latitude: null as number | null, longitude: null as number | null },
+  });
+  const [loading, setLoading] = useState(false);
 
-    fetchVendors();
-  }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  // Toggle Block/Unblock Vendor
-  const toggleBlockStatus = async (vendorId: string) => {
-    try {
-      setLoading(vendorId); // Show loading state for this vendor
-      const response = await fetch(`https://app.quickfoodshop.co.uk/v1/dashboard/block-unblock/${vendorId}`, {
-        method: "POST", 
-        headers: { "Content-Type": "application/json" },
-      });
+  const handleMapSelect = (lat: number, lng: number) => {
+    if (lat && lng) {
+      setFormData((prev) => ({ ...prev, location: { latitude: lat, longitude: lng } }));
+    }
+  };
+  
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to update status");
-
-      // Update UI after successful toggle
-      setVendors((prev) =>
-        prev.map((vendor) =>
-          vendor._id === vendorId ? { ...vendor, block: !vendor.block } : vendor
-        )
+  const useCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData((prev) => ({
+            ...prev,
+            location: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          }));
+        },
+        (error) => console.error("Error getting location:", error)
       );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
 
-      console.log("Status updated:", data);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch("https://app.quickfoodshop.co.uk/v1/vendor/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      if (result.success) {
+        router.push("/vendor/pending-verification");
+      } else {
+        alert("Signup failed: " + result.message);
+      }
     } catch (error) {
-      console.error("Failed to update status:", error.message);
+      console.error("Error during signup:", error);
     } finally {
-      setLoading(null);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 bg-white shadow rounded-lg">
-      <h2 className="text-lg font-semibold mb-4">Active Vendors</h2>
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border p-2">Vendor ID</th>
-            <th className="border p-2">Store Name</th>
-            <th className="border p-2">Contact Person</th>
-            <th className="border p-2">Email</th>
-            <th className="border p-2">Registered Date</th>
-            <th className="border p-2">Status</th>
-            <th className="border p-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vendors.map((vendor) => (
-            <tr key={vendor._id} className="text-center">
-              <td className="border p-2">{vendor._id}</td>
-              <td className="border p-2">{vendor.businessName}</td>
-              <td className="border p-2">{`${vendor.firstName} ${vendor.lastName}`}</td>
-              <td className="border p-2">{vendor.email}</td>
-              <td className="border p-2">{new Date(vendor.createdAt).toLocaleDateString()}</td>
-              <td className={`border p-2 ${vendor.block ? "text-red-500" : "text-green-500"}`}>
-                {vendor.block ? "Blocked" : "Active"}
-              </td>
-              <td className="border p-2">
-                <Button
-                  variant={vendor.block ? "default" : "destructive"}
-                  onClick={() => toggleBlockStatus(vendor._id)}
-                  disabled={loading === vendor._id}
-                >
-                  {loading === vendor._id ? "Updating..." : vendor.block ? "Unblock" : "Block"}
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold text-center mb-4">Vendor Sign Up</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input name="firstName" placeholder="First Name" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="lastName" placeholder="Last Name" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input type="email" name="email" placeholder="Email" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input type="password" name="password" placeholder="Password" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="businessAddress" placeholder="Business Address" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="phoneNumber" placeholder="Phone Number" onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="businessName" placeholder="Business Name" onChange={handleChange} className="w-full p-2 border rounded" />
+        <textarea name="businessDescription" placeholder="Business Description" onChange={handleChange} className="w-full p-2 border rounded"></textarea>
+
+        <div className="flex flex-col gap-3">
+          <Button type="button" onClick={useCurrentLocation} className="bg-blue-500 text-white">Use Present Location</Button>
+          <MapComponent onSelect={handleMapSelect} />
+        </div>
+
+        <Button type="submit" disabled={loading} className="w-full bg-green-500 text-white">
+          {loading ? "Signing Up..." : "Sign Up"}
+        </Button>
+      </form>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import PendingVerificationAlert from "@/components/PendingVerificationAlert"; 
+import PendingVerificationAlert from "@/components/PendingVerificationAlert"; // Create this component
 
 const VendorLoginPage = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ const VendorLoginPage = () => {
 
     try {
       setLoading(true);
-      const response = await fetch("https://app.quickfoodshop.co.uk/v1/auth/login", {
+      const response = await fetch("https://app.quickfoodshop.co.uk/v1/vendor/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
