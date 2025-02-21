@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PendingVerificationAlert from "@/components/PendingVerificationAlert"; // Create this component
+import { SiteHeader } from "@/components/site-header";
 
 const VendorLoginPage = () => {
   const [formData, setFormData] = useState({
@@ -51,6 +52,7 @@ const VendorLoginPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-white flex justify-center items-center">
+      <SiteHeader/>
       {showPending ? (
         <PendingVerificationAlert /> // Show pending verification alert if vendor is pending
       ) : (
@@ -62,7 +64,7 @@ const VendorLoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <InputField label="Phone Number" name="phoneNumber" value={formData.phoneNumber} onChange={setFormData} />
             <InputField label="Password" name="password" value={formData.password} onChange={setFormData} type="password" />
-            <Button type="submit" className="w-full bg-[#FF4500] text-white hover:bg-[#FF4500]/90" disabled={loading}>
+            <Button type="submit" className="w-full bg-[#006634] text-white hover:bg-[#006634]/90" disabled={loading}>
               {loading ? "Logging In..." : "LOGIN"}
             </Button>
           </form>

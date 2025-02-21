@@ -9,7 +9,7 @@ const FoodOrderUI = () => {
   const searchParams = useSearchParams();
 
   // Get price dynamically from FoodItemCard.tsx
-  const basePrice = parseFloat(searchParams.get("price")) || 0;
+  const basePrice = parseFloat(searchParams.get("price") || "0");
 
   const [extras, setExtras] = useState([
     { name: "Beef", quantity: 1, price: 50, category: "protein", image: "/beef.png" },

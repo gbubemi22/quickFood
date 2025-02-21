@@ -18,7 +18,7 @@ export default function OnboardPage() {
       case "customer":
         return "/signup";
       case "vendor":
-        return "/vendor/login";
+        return "/vendor/signup";
       default:
         return "#";
     }

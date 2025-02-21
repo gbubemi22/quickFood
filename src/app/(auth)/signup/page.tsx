@@ -141,9 +141,13 @@ const OtpVerification = ({ email }) => {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg text-center">
-      <Mail className="w-12 h-12 mx-auto text-[#FF4#006634500]" />
-      <h2 className="text-2xl font-semibold mb-4">Check Mail for OTP</h2>
-      <p className="text-gray-600 mb-4">Enter the 6-digit code sent to your email.</p>
+      <svg width="82" className="mx-auto" height="82" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M30.7474 30.7539L46.1224 41.0039L61.4974 30.7539M10.2474 46.1289H17.0807M3.41406 35.8789H17.0807" stroke="#23C55E" stroke-width="5.125" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.082 25.6276V23.9193C17.082 22.107 17.802 20.3689 19.0835 19.0874C20.365 17.8059 22.1031 17.0859 23.9154 17.0859H68.332C70.1443 17.0859 71.8824 17.8059 73.1639 19.0874C74.4454 20.3689 75.1654 22.107 75.1654 23.9193V58.0859C75.1654 59.8982 74.4454 61.6363 73.1639 62.9178C71.8824 64.1993 70.1443 64.9193 68.332 64.9193H23.9154C22.1031 64.9193 20.365 64.1993 19.0835 62.9178C17.802 61.6363 17.082 59.8982 17.082 58.0859V56.3776" stroke="#23C55E" stroke-width="5.125" stroke-linecap="round"/>
+</svg>
+
+      <h2 className="text-2xl font-semibold mb-4">Check your Email</h2>
+      <p className="text-gray-600 mb-4">A verification code has been sent to your email.</p>
       <div className="flex justify-center space-x-2">
         {otp.map((digit, index) => (
           <input key={index} className="border w-10 h-12 text-center text-xl" type="text" maxLength="1" value={digit} onChange={(e) => handleChange(e, index)} />
