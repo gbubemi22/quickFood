@@ -18,10 +18,9 @@ export default function AdminLoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting Data:", formData); // Debugging log
     
     try {
-      setLoading(true); // Show loading state
+      setLoading(true);
       const response = await fetch("https://app.quickfoodshop.co.uk/v1/admin/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,19 +31,23 @@ export default function AdminLoginPage() {
   
       if (response.ok) {
         console.log("Login Successful:", data);
-        // Redirect or handle login success (like storing the token)
+        
+        // Store auth token in localStorage
+        localStorage.setItem("authToken", data.token);
+        
+        // Redirect to admin dashboard
         setShowSuccess(true);
       } else {
-        console.error("Login Failed:", data);
         setError(data.message || "Login failed, please try again.");
       }
     } catch (error) {
       console.error("Error:", error);
       alert("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen w-full bg-white flex justify-center items-center">

@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/app/admin/components/app-sidebar";
+import { AppSidebar } from "@/app/vendor/components/app-sidebar";
 import { Input } from "@/app/admin/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Bell, Search, User } from "lucide-react";

@@ -38,7 +38,7 @@ export function SiteHeader() {
       <div className="container flex items-center justify-between h-16 px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src={Logo} alt="Logo" width={40} height={40} className="h-8 w-8" />
+          <Image src={Logo} alt="Logo" width={50} height={40} className="h-8 w-8" />
         </Link>
 
         {/* Desktop Nav Links */}

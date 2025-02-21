@@ -1,5 +1,5 @@
 import { SiteHeader } from "@/components/site-header";
-import { NavBar } from "@/Global/Navbar";
+
 import React from "react";
 
 const Layout = ({
@@ -9,8 +9,7 @@ const Layout = ({
 }>) => {
   return (
     <div className=" h-screen bg-gray-50">
-      {/* <SiteHeader /> */}
-      <NavBar/>
+      <SiteHeader />
       <main className="flex items-center h-full justify-center  w-full">
         {children}
       </main>

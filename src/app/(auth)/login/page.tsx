@@ -46,17 +46,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-[90%] rounded-xl w-full flex items-center max-w-screen-2xl mx-auto justify-center font-inter bg-[#1B3726]">
-      <div className="flex w-full gap-16 justify-center h-full items-center">
+    <div className="h-[80%] rounded-xl w-[80%] flex items-center max-w-screen-2xl mx-auto justify-center font-inter"
+    style={{ backgroundImage: `url('/bg.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <div className="flex w-full gap-16 justify-center h-full items-center pr-8 ">
         <div className="hidden lg:block lg:w-1/2 relative h-[90%] rounded-lg overflow-hidden">
-          <Image src={login} alt="Login" fill objectFit="cover" className="rounded-lg h-full w-1/2" />
+          <Image src={login} alt="Login" fill objectFit="contain" className="rounded-lg h-auto w-full" />
         </div>
         <div className="w-1/2 max-w-[480px] space-y-6">
           <div className="space-y-8 text-white">
-            <h1 className="text-6xl font-semibold tracking-tight">Login</h1>
+            <h1 className="text-4xl font-semibold tracking-tight">Login</h1>
             <p className="text-zinc-100">
               Don&apos;t have an account? {" "}
-              <Link href="/signup" className="text-[#FF4500] hover:underline">
+              <Link href="/signup" className="text-[#FFA84A] hover:underline">
                 Sign Up
               </Link>
             </p>
@@ -77,21 +79,24 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-sm text-white">Password</label>
-                <Link href="/forgotPassword" className="text-sm text-zinc-100 hover:underline">
-                  Forgot password?
-                </Link>
+                
               </div>
               <Input
                 type="password"
-                placeholder="••••••••"
+                placeholder="********"
                 className="h-12 bg-white pl-12"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
+            <div>
+              <Link href="/forgotPassword" className="text-sm text-zinc-100 flex-row-reverse hover:underline">
+                  Forgot password?
+            </Link>
+            </div>
             <Button
-              className="h-12 w-full bg-[#FF4500] text-base font-semibold hover:bg-[#FF4500]/90"
+              className="h-12 w-full bg-[#006634] text-base font-semibold hover:bg-[#006634]/90"
               onClick={handleLogin}
               disabled={loading}
             >

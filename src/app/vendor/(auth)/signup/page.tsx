@@ -14,6 +14,7 @@ const MapComponent = dynamic(() => import("@/components/MapComponent"), {
   ssr: false,
 });
 
+
 export default function VendorSignup() {
   const router = useRouter();
   const [formData, setFormData] = useState({

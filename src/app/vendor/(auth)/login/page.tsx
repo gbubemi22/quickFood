@@ -36,7 +36,7 @@ const VendorLoginPage = () => {
           setShowPending(true);
         } else {
           // Redirect to the dashboard or home page if approved
-          router.push("/dashboard"); // Replace with the actual route
+          router.push("/vendor/dashboard"); // Replace with the actual route
         }
       } else {
         setError(data.message || "Login failed, please try again.");

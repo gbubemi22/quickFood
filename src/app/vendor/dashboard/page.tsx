@@ -1,46 +1,51 @@
-import { Home, Users } from "lucide-react";
+"use client"
+import { useEffect, useState } from "react";
 
-import { StatCard } from "@/components/stat-card";
-import { RecentOrders } from "@/components/recent-orders";
-import { TopVendors } from "@/components/top-vendors";
-import { MostPurchased } from "@/components/most-purchased";
+export default function VendorDashboard() {
+  const [stats, setStats] = useState<{
+    totalIncome: number;
+    totalOrders: number;
+    vendorId: string;
+    totalCustomers: number;
+  } | null>(null);
 
-export default function DashboardPage() {
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://app.quickfoodshop.co.uk/v1/vendor-dashboard/stats");
+        if (!response.ok) throw new Error("Failed to fetch data");
+
+        const data = await response.json();
+        setStats(data.data); // Assuming `data` contains `{ data: { totalIncome, totalOrders, ... } }`
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!stats) return <p>Loading...</p>;
+
   return (
-    <div className="flex w-full  min-h-screen ">
-      <div className="w-full">
-        <main className="flex w-full gap-6 p-6">
-          <div className="flex-1 space-y-6">
-            <div className="grid gap-6 md:grid-cols-3">
-              <StatCard
-                title="Total Income"
-                value="380.0K"
-                description="+30% This month"
-                icon={Home}
-                className="bg-blue-50"
-              />
-              <StatCard
-                title="Total Orders"
-                value="615"
-                icon={Home}
-                className="bg-green-50"
-                seeMore
-              />
-              <StatCard
-                title="Customers"
-                value="366"
-                icon={Users}
-                className="bg-blue-50"
-                seeMore
-              />
-            </div>
-            <RecentOrders />
-          </div>
-          <div className="w-[300px] space-y-6">
-            <TopVendors />
-            
-          </div>
-        </main>
+    <div className="p-6">
+      <h1 className="text-xl font-semibold">Vendor Dashboard</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        <div className="p-4 border rounded-lg">
+          <h2 className="text-lg font-bold">Total Income</h2>
+          <p>${stats.totalIncome.toFixed(2)}</p>
+        </div>
+        <div className="p-4 border rounded-lg">
+          <h2 className="text-lg font-bold">Total Orders</h2>
+          <p>{stats.totalOrders}</p>
+        </div>
+        <div className="p-4 border rounded-lg">
+          <h2 className="text-lg font-bold">Total Customers</h2>
+          <p>{stats.totalCustomers}</p>
+        </div>
       </div>
     </div>
   );

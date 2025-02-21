@@ -7,32 +7,39 @@ import Image from "next/image";
 import heroImage from "../../public/Hero.png";
 import appMockup from "../../public/app-mockup.png";
 import fresh from "../../public/fresh-foods.png";
-import one from "../../public/basket1.png";
-import two from "../../public/basket2.png";
-import three from "../../public/basket.png";
-import vector from "../../public/vector.png";
+import one from "../../public/pic1.png";
+import two from "../../public/pic2.png";
+import three from "../../public/pic3.png";
+import qr from "../../public/qr.png";
 import android from "../../public/image 65.png";
 import ios from "../../public/image 66.png";
-import { Nav } from "@/Global/Nav";
+import vendor from "../../public/vendor.png";
+import dispatch from "../../public/dispatch.png";
+// import bg from "../../public/bg.png";
+// import { Nav } from "@/Global/Nav";
 // import { Nav } from "@/Global/Navbar";
+import { SiteHeader } from "@/components/site-header";
+
 
 export default function LandingPage() {
   return (
     <div className="bg-white font-inter">
-      <Nav/>
-      {/* Hero Section */}
-      <section className="relative w-[93%] h-screen flex items-center justify-center bg-[#082814] text-white text-center p-8 rounded-[30px] mx-auto">
-      {/* Left Side: Image */}
-      <div className="w-1/2 h-full hidden lg:flex items-center justify-center">
+     <SiteHeader/>
+     <section
+  className="relative w-[100%] h-screen flex items-center justify-center text-white text-center p-8  mx-auto"
+  style={{ backgroundImage: `url('/bg.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+>
+        {/* Left Side: Image */}
+      <div className="w-1/2 h-full hidden lg:flex  items-cover justify-center">
         <Image
           src={heroImage}
           alt="Fresh Food"
-          className="object-cover w-4/5 h-auto rounded-lg"
+          className="object-cover w-1/2 h-auto rounded-lg top-2"
         />
       </div>
 
      {/* Right Side: Text */}
-<div className="relative w-full lg:w-1/2 text-center lg:text-left max-w-3xl">
+<div className="relative w-full object-contain lg:w-1/2 text-center lg:text-left max-w-3xl">
   {/* Text Section */}
   <h1 className="text-5xl font-bold leading-tight relative z-10">
     Raw & Fresh Food  <br />
@@ -84,7 +91,7 @@ export default function LandingPage() {
 
 
 
-    </section>
+  </section>
 
 
       {/* Features Section */}
@@ -93,14 +100,6 @@ export default function LandingPage() {
   <div className="flex flex-wrap justify-center items-center gap-12 mt-8">
     {/* Feature 1 */}
     <div className="max-w-xs flex flex-col items-center text-center">
-      
-      <Image 
-        className="object-contain p-3" 
-        src={vector} 
-        alt="Healthy Food" 
-        width={100} 
-        height={100}
-      />
       <Image 
         className="object-contain" 
         src={one} 
@@ -114,13 +113,6 @@ export default function LandingPage() {
 
     {/* Feature 2 */}
     <div className="max-w-xs flex flex-col items-center text-center">
-    <Image 
-        className="object-contain p-3" 
-        src={vector} 
-        alt="Healthy Food" 
-        width={100} 
-        height={100}
-      />
       <Image 
         className="object-contain" 
         src={two} 
@@ -134,13 +126,6 @@ export default function LandingPage() {
 
     {/* Feature 3 */}
     <div className="max-w-xs flex flex-col items-center text-center">
-    <Image 
-        className="object-contain p-3" 
-        src={vector} 
-        alt="Healthy Food" 
-        width={100} 
-        height={100}
-      />
       <Image 
         className="object-contain" 
         src={three} 
@@ -156,7 +141,6 @@ export default function LandingPage() {
 
 
 
-{/* Appl Download */}
 <section className="bg-[#F0FFF0] py-[100px] px-8 flex flex-col lg:flex-row items-center justify-center text-center lg:text-left">
   {/* Text Section */}
   <div className="w-full lg:w-1/2 flex flex-col gap-4 lg:pl-28">
@@ -165,20 +149,65 @@ export default function LandingPage() {
       Download our online app today and start placing your <br /> orders now!
     </p>
 
-    {/* Download Buttons */}
-    <div className="flex justify-center lg:justify-start mt-6 gap-5">
-      <Image src={android} alt="android" className="w-[150px] h-auto" />
-      <Image src={ios} alt="ios" className="w-[150px] h-auto" />
+    {/* Download Buttons & QR Code Container */}
+    <div className="flex flex-col lg:flex-col items-center lg:items-start mt-6 gap-5">
+      {/* Download Buttons */}
+      <div className="flex flex-col lg:flex-row justify-center lg:justify-start gap-5">
+        <Image src={android} alt="android" className="w-[150px] h-auto" />
+        <Image src={ios} alt="ios" className="w-[150px] h-auto" />
+      </div>
+
+      {/* QR Code (Below Download Buttons on Large Screens) */}
+      <Image 
+        className="object-contain mt-4" 
+        src={qr} 
+        alt="qr code" 
+        width={120} 
+        height={120} 
+      />
     </div>
   </div>
 
   {/* Image Section */}
-  <div className="w-full lg:w-1/2 flex items-center justify-center">
+  <div className="w-full lg:w-1/2 flex items-center justify-center mt-8 lg:mt-0">
     <Image 
       src={appMockup} 
       alt="App Mockup" 
       className="w-[80%] max-w-[600px] h-auto object-contain"
     />
+  </div>
+</section>
+
+
+  {/* Mission Section */}
+  <section className="py-16 px-8 text-center">
+  <h2 className="text-4xl font-bold text-[#1A1A1A]">Join our mission!</h2>
+  <div className="flex flex-wrap justify-center items-center gap-12 mt-8">
+    {/* Feature 1 */}
+    <div className="max-w-xs flex flex-col items-center text-center">
+      <Image 
+        className="object-contain" 
+        src={vendor} 
+        alt="vendor" 
+        width={170} 
+        height={170} 
+      />
+      <h3 className="text-2xl text-[#FF6600] font-semibold mt-4">Register as Vendor</h3>
+      <p className="text-[#1A1A1A]">Enjoy delicious food from a variety of restaurants near you!</p>
+    </div>
+
+    {/* Feature 2 */}
+    <div className="max-w-xs flex flex-col items-center text-center">
+      <Image 
+        className="object-contain" 
+        src={dispatch} 
+        alt="dispatch" 
+        width={170} 
+        height={170} 
+      />
+      <h3 className="text-2xl text-[#FF6600]  font-semibold mt-4">Register as Dispatch</h3>
+      <p className="text-[#1A1A1A]">Coming Soon!Coming Soon!Coming Soon!</p>
+    </div>
   </div>
 </section>
 

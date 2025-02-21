@@ -25,13 +25,13 @@ const userSrc = "/user.png";
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
 const menuItems = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
-  { name: "Transactions", href: "/dashboard/transactions", icon: Receipt },
-  { name: "Invoice", href: "/dashboard/invoice", icon: FileText },
-  { name: "Tracking", href: "/dashboard/tracking", icon: MapPin },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
-  { name: "Support", href: "/dashboard/support", icon: HelpCircle },
+  { name: "Dashboard", href: "/vendor/dashboard", icon: LayoutDashboard },
+  { name: "Orders", href: "/vendor/orders", icon: ShoppingCart },
+  { name: "Transactions", href: "/vendor/transactions", icon: Receipt },
+  { name: "Invoice", href: "/vendor/invoice", icon: FileText },
+  { name: "Tracking", href: "/vendor/tracking", icon: MapPin },
+  { name: "Settings", href: "/vendor/settings", icon: Settings },
+  { name: "Support", href: "/vendor/support", icon: HelpCircle },
 ];
 
 export function SidebarMenu({ className }: SidebarProps) {
