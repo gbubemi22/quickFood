@@ -34,21 +34,7 @@ export default function VendorSignUpPage() {
     setFormData((prev) => ({ ...prev, location: { latitude: lat, longitude: lng } }));
   };
 
-  const useCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          handleChange("location", {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        (error) => console.error("Error getting location:", error)
-      );
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
