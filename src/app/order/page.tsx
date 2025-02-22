@@ -1,14 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Plus, Minus } from "lucide-react";
-    import { SiteHeader } from "@/components/site-header";
+import { SiteHeader } from "@/components/site-header";
 
+// Wrapper component with Suspense
 const FoodOrderUI = () => {
+  return (
+    <Suspense fallback={<div className="text-center p-8">Loading meal options...</div>}>
+      <FoodOrderContent />
+    </Suspense>
+  );
+};
+
+// Main component with all your existing logic
+const FoodOrderContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  // Get price dynamically from FoodItemCard.tsx
   const basePrice = parseFloat(searchParams.get("price") || "0");
 
   const [extras, setExtras] = useState([
@@ -51,18 +59,12 @@ const FoodOrderUI = () => {
       total: calculateTotal(),
     };
 
-    // Ensure existing cart is an array
     const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const updatedCart = Array.isArray(existingCart) ? [...existingCart] : [];
+    updatedCart.push(cartItem);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-    if (!Array.isArray(existingCart)) {
-      localStorage.setItem("cart", JSON.stringify([cartItem]));
-    } else {
-      existingCart.push(cartItem);
-      localStorage.setItem("cart", JSON.stringify(existingCart));
-    }
-
-    console.log("Navigating to cart..."); // Debugging
-    router.push("/cart"); // Ensure this route exists
+    router.push("/cart");
   };
 
   const proteins = extras.filter((item) => item.category === "protein");
@@ -93,13 +95,13 @@ const FoodOrderUI = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleDecrement(item.name)}
-                  className="p-1 border rounded"
+                  className="p-1 border rounded hover:bg-gray-100 transition-colors"
                 >
                   <Minus size={14} />
                 </button>
                 <button
                   onClick={() => handleIncrement(item.name)}
-                  className="p-1 border rounded"
+                  className="p-1 border rounded hover:bg-gray-100 transition-colors"
                 >
                   <Plus size={14} />
                 </button>
@@ -130,8 +132,7 @@ const FoodOrderUI = () => {
                 A plate of Jollof Rice with Assorted Meat and Fish, prepared
                 with unique Nigerian spices and seasoning.
               </p>
-               {/* Restaurant Info */}
-               <div className="flex flex-col md:flex-row items-center gap-4">
+              <div className="flex flex-col md:flex-row items-center gap-4">
                 <img
                   src="/restaurant.png"
                   alt="Restaurant"
@@ -142,7 +143,6 @@ const FoodOrderUI = () => {
                 </span>
               </div>
 
-              {/* Info Icons */}
               <div className="grid grid-cols-3 md:flex items-center justify-center gap-6 md:gap-10 mt-6">
                 <div className="flex flex-col items-center border-r md:pr-6">
                   <img
@@ -179,24 +179,21 @@ const FoodOrderUI = () => {
           <div className="w-full md:w-[40%] mt-6 p-4 border rounded-lg">
             <h3 className="text-lg font-bold">Add Extras</h3>
 
-            {/* Dynamic Proteins & Drinks */}
             {renderExtras("Proteins", proteins)}
             {renderExtras("Drinks", drinks)}
 
-            {/* Special Request */}
             <div className="mt-4">
               <h4 className="font-semibold">Special Request (optional)</h4>
               <textarea
-                className="w-full p-2 border rounded mt-2 text-sm"
+                className="w-full p-2 border rounded mt-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder="Please make sure it's extra spicy"
               ></textarea>
             </div>
 
-            {/* Total and CTA */}
             <div className="mt-6 text-left">
               <p className="text-lg font-semibold">Total: ₦{calculateTotal().toFixed(2)}</p>
               <button
-                className="w-full bg-[#006634] text-white py-2 rounded-md mt-2"
+                className="w-full bg-[#006634] text-white py-2 rounded-md mt-2 hover:bg-[#005529] transition-colors"
                 onClick={handleAddToCart}
               >
                 ADD TO CART
