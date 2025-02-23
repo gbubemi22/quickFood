@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Google from "../../../../public/ic_google.png";
+import { useRouter } from "next/navigation";
 import { Mail, CheckCircle } from "lucide-react";
 
 export default function SignUpPage() {
@@ -109,7 +110,7 @@ const OtpVerification = ({ email }) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const router = useRouter(); // ✅ Initialize router
 
   const handleChange = (e, index) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
@@ -117,6 +118,11 @@ const OtpVerification = ({ email }) => {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
+
+      // Move to the next input
+      if (value && index < otp.length - 1) {
+        document.getElementById(`otp-${index + 1}`).focus();
+      }
     }
   };
 
@@ -128,9 +134,12 @@ const OtpVerification = ({ email }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp_token: otp.join("") }),
       });
+
       const data = await response.json();
       if (response.ok) {
-        setSuccess(true);
+        // ✅ Redirect to Signup Success Page
+        router.push("/SignupSuccessful");
+
       } else {
         setError(data.message || "Invalid OTP, please try again.");
       }
@@ -142,29 +151,35 @@ const OtpVerification = ({ email }) => {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8 bg-white shadow-lg rounded-lg text-center">
-      <svg width="82" className="mx-auto" height="82" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="82" height="82" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg" className="mx-auto">
 <path d="M30.7474 30.7539L46.1224 41.0039L61.4974 30.7539M10.2474 46.1289H17.0807M3.41406 35.8789H17.0807" stroke="#23C55E" strokeWidth="5.125" strokeLinecap="round" stroke-linejoin="round"/>
 <path d="M17.082 25.6276V23.9193C17.082 22.107 17.802 20.3689 19.0835 19.0874C20.365 17.8059 22.1031 17.0859 23.9154 17.0859H68.332C70.1443 17.0859 71.8824 17.8059 73.1639 19.0874C74.4454 20.3689 75.1654 22.107 75.1654 23.9193V58.0859C75.1654 59.8982 74.4454 61.6363 73.1639 62.9178C71.8824 64.1993 70.1443 64.9193 68.332 64.9193H23.9154C22.1031 64.9193 20.365 64.1993 19.0835 62.9178C17.802 61.6363 17.082 59.8982 17.082 58.0859V56.3776" stroke="#23C55E" stroke-width="5.125" stroke-linecap="round"/>
 </svg>
 
       <h2 className="text-2xl font-semibold mb-4">Check your Email</h2>
       <p className="text-gray-600 mb-4">A verification code has been sent to your email.</p>
+      
       <div className="flex justify-center space-x-2">
         {otp.map((digit, index) => (
-          <input key={index} className="border w-10 h-12 text-center text-xl" type="text" maxLength="1" value={digit} onChange={(e) => handleChange(e, index)} />
+          <input
+            key={index}
+            id={`otp-${index}`}
+            className="border w-10 h-12 text-center text-xl"
+            type="text"
+            maxLength="1"
+            value={digit}
+            onChange={(e) => handleChange(e, index)}
+          />
         ))}
       </div>
-      {error && <p className="text-red-500 text-center">{error}</p>}
+      
+      {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+      
       <Button className="mt-4 bg-[#006634] text-white w-full" onClick={handleVerifyOtp} disabled={loading}>
         {loading ? "Verifying..." : "CONFIRM"}
       </Button>
-      {success && (
-        <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-lg">
-          <CheckCircle className="w-8 h-8 mx-auto mb-2" />
-          <p>Verification Successful! You can now login.</p>
-          <Link href="/login" className="mt-2 block text-[#006634] font-semibold hover:underline">Go to Login</Link>
-        </div>
-      )}
-    </div>
+      </div>
+    
+
   );
 };

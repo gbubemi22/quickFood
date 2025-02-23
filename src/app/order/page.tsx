@@ -21,9 +21,9 @@ const FoodOrderContent = () => {
 
   const [extras, setExtras] = useState([
     { name: "Beef", quantity: 1, price: 50, category: "protein", image: "/beef.png" },
-    { name: "Fish", quantity: 0, price: 70, category: "protein", image: "/fish.png" },
-    { name: "Water", quantity: 1, price: 10, category: "drink", image: "/water.png" },
-    { name: "Cola", quantity: 0, price: 20, category: "drink", image: "/cola.png" },
+    { name: "Fish", quantity: 0, price: 70, category: "protein", image: "/beef.png" },
+    { name: "Water", quantity: 1, price: 10, category: "drink", image: "/beef.png" },
+    { name: "Cola", quantity: 0, price: 20, category: "drink", image: "/beef.png" },
   ]);
 
   const handleIncrement = (name) => {
